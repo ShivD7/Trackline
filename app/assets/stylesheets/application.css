@@ -20,6 +20,9 @@ body { margin: 0; min-width: 320px; background: radial-gradient(circle at 78% -1
 a { color: inherit; }
 button, input, select, textarea { font: inherit; }
 button, .button { cursor: pointer; }
+:focus-visible { outline: 3px solid rgba(31,92,66,.35); outline-offset: 3px; }
+.skip-link { position: fixed; z-index: 100; top: 8px; left: 8px; padding: 9px 13px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 750; text-decoration: none; transform: translateY(-150%); }
+.skip-link:focus { transform: translateY(0); }
 
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 236px minmax(0, 1fr); }
 .sidebar { position: sticky; top: 0; height: 100vh; padding: 34px 24px; background: var(--ink); color: #f7f5ee; display: flex; flex-direction: column; }
@@ -34,6 +37,7 @@ button, .button { cursor: pointer; }
 
 .main-content { width: 100%; max-width: 1500px; padding: 42px clamp(24px, 5vw, 76px) 72px; }
 .mobile-header { display: none; }
+.mobile-nav { display: none; }
 .page-header, .record-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 32px; }
 .page-header--dashboard { align-items: center; }
 .page-header--narrow { max-width: 860px; }
@@ -220,6 +224,9 @@ button, .button { cursor: pointer; }
   .sidebar { display: none; }
   .main-content { padding: 0 16px 84px; }
   .mobile-header { display: flex; align-items: center; justify-content: space-between; margin: 0 -16px 28px; padding: 14px 16px; border-bottom: 1px solid var(--line); background: rgba(244,242,236,.94); backdrop-filter: blur(14px); }
+  .mobile-nav { position: fixed; z-index: 20; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, 1fr); padding: 7px 7px calc(7px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255,253,248,.96); box-shadow: 0 -8px 24px rgba(28,40,32,.07); backdrop-filter: blur(14px); }
+  .mobile-nav .nav-link { display: grid; place-items: center; padding: 9px 3px; font-size: 9px; text-align: center; }
+  .mobile-nav .nav-link:hover, .mobile-nav .nav-link.active { background: var(--green-light); color: var(--green); }
   .brand--mobile { color: var(--ink); }
   .page-header, .record-hero { align-items: flex-start; flex-direction: column; }
   .page-header h1 { font-size: 39px; }

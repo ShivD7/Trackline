@@ -7,7 +7,7 @@ class JobApplicationsController < ApplicationController
     @job_applications = @job_applications.where(priority: params[:priority]) if params[:priority].present?
     @job_applications = @job_applications.where(work_mode: params[:work_mode]) if params[:work_mode].present?
     @job_applications = filter_by_follow_up(@job_applications)
-    @job_applications = @job_applications.order(sort_order)
+    @job_applications = sort_applications(@job_applications)
   end
 
   def pipeline
@@ -92,12 +92,13 @@ class JobApplicationsController < ApplicationController
     Company.where("lower(name) = ?", name.downcase).first_or_initialize.tap { |company| company.name = name }
   end
 
-  def sort_order
-    {
-      "oldest" => { updated_at: :asc },
-      "follow_up" => { follow_up_on: :asc },
-      "company" => { companies: { name: :asc } }
-    }.fetch(params[:sort], { updated_at: :desc })
+  def sort_applications(scope)
+    case params[:sort]
+    when "oldest" then scope.order(updated_at: :asc)
+    when "follow_up" then scope.order(Arel.sql("follow_up_on IS NULL, follow_up_on ASC"))
+    when "company" then scope.references(:company).order(Arel.sql("lower(companies.name) ASC"))
+    else scope.order(updated_at: :desc)
+    end
   end
 
   def filter_by_follow_up(scope)

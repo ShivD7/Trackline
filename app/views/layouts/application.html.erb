@@ -25,6 +25,7 @@
   </head>
 
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div class="app-shell">
       <aside class="sidebar">
         <%= link_to root_path, class: "brand" do %>
@@ -34,7 +35,7 @@
 
         <nav class="primary-nav" aria-label="Primary navigation">
           <%= nav_link "Overview", root_path %>
-          <%= nav_link "Applications", job_applications_path %>
+          <%= nav_link "Applications", job_applications_path, match: "/job_applications", exclude: "/job_applications/pipeline" %>
           <%= nav_link "Pipeline", pipeline_job_applications_path %>
           <%= nav_link "Follow-ups", follow_ups_path %>
           <%= nav_link "Companies", companies_path, match: "/companies" %>
@@ -47,7 +48,7 @@
         </div>
       </aside>
 
-      <main class="main-content">
+      <main class="main-content" id="main-content">
         <header class="mobile-header">
           <%= link_to "Trackline", root_path, class: "brand brand--mobile" %>
           <%= link_to "Add", new_job_application_path, class: "button button--small" %>
@@ -59,6 +60,14 @@
 
         <%= yield %>
       </main>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <%= nav_link "Overview", root_path %>
+        <%= nav_link "Applications", job_applications_path, match: "/job_applications", exclude: "/job_applications/pipeline" %>
+        <%= nav_link "Pipeline", pipeline_job_applications_path %>
+        <%= nav_link "Follow-ups", follow_ups_path %>
+        <%= nav_link "Companies", companies_path, match: "/companies" %>
+      </nav>
     </div>
   </body>
 </html>

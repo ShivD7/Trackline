@@ -17,8 +17,9 @@ module ApplicationHelper
     STATUS_LABELS.fetch(status.to_s, status.to_s.humanize)
   end
 
-  def nav_link(label, path, match: nil)
+  def nav_link(label, path, match: nil, exclude: nil)
     active = match ? request.path.start_with?(match) : current_page?(path)
+    active = false if exclude && request.path.start_with?(exclude)
     link_to label, path, class: class_names("nav-link", active: active), "aria-current": ("page" if active)
   end
 

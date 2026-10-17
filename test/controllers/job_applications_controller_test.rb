@@ -59,6 +59,15 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".application-title", text: "Rails Engineer"
   end
 
+  test "sorts dated follow ups before applications without a date" do
+    JobApplication.create!(company: @company, role_title: "Due soon", follow_up_on: Date.tomorrow)
+
+    get job_applications_url, params: { sort: "follow_up" }
+
+    assert_response :success
+    assert_equal [ "Due soon", "Rails Engineer" ], css_select(".application-title").map(&:text)
+  end
+
   test "updates status through the history service" do
     assert_difference -> { @application.stage_changes.count }, 1 do
       patch job_application_url(@application), params: {
