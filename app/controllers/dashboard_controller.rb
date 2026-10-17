@@ -4,6 +4,7 @@ class DashboardController < ApplicationController
     @total_applications = JobApplication.count
     @active_applications = JobApplication.active.count
     @offers = @status_counts.fetch("offer", 0)
+    @stage_moves_this_week = StageChange.where(changed_at: 7.days.ago..).count
     @response_rate = response_rate
     @recent_applications = JobApplication.includes(:company).recent_first.limit(6)
     @follow_ups = JobApplication.includes(:company).upcoming_follow_ups.order(:follow_up_on).limit(6)

@@ -30,6 +30,11 @@
     <strong><%= @overdue_count %></strong>
     <small><%= @overdue_count.zero? ? "You’re all caught up" : "Worth a quick note today" %></small>
   </article>
+  <article class="metric-card">
+    <span>Moves this week</span>
+    <strong><%= @stage_moves_this_week %></strong>
+    <small>Stage updates in the last 7 days</small>
+  </article>
 </section>
 
 <section class="pipeline-card">

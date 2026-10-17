@@ -6,7 +6,8 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", /Good/
-    assert_select ".metric-card", count: 4
+    assert_select ".metric-card", count: 5
+    assert_select ".metric-card", text: /Moves this week/
   end
 
   test "groups active follow ups by date" do
