@@ -21,6 +21,13 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".pipeline-application", text: /Rails Engineer/
   end
 
+  test "prefills a company when adding a role from its profile" do
+    get new_job_application_url, params: { company_id: @company.id }
+
+    assert_response :success
+    assert_select "input[name='job_application[company_name]'][value='Acme']"
+  end
+
   test "creates an application and its initial history" do
     assert_difference [ "JobApplication.count", "Company.count", "StageChange.count" ], 1 do
       post job_applications_url, params: {

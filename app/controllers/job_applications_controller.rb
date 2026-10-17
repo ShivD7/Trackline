@@ -21,6 +21,7 @@ class JobApplicationsController < ApplicationController
 
   def new
     @job_application = JobApplication.new(status: :wishlist, priority: :medium)
+    @job_application.company = Company.find_by(id: params[:company_id]) if params[:company_id].present?
   end
 
   def create
