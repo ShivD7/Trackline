@@ -69,4 +69,13 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_nil copy.follow_up_on
     assert_equal @application.company, copy.company
   end
+
+  test "marks a follow up complete" do
+    @application.update!(follow_up_on: Date.current)
+
+    patch complete_follow_up_job_application_url(@application)
+
+    assert_redirected_to job_application_url(@application)
+    assert_nil @application.reload.follow_up_on
+  end
 end

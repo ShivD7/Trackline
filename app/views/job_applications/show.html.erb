@@ -32,6 +32,11 @@
         <div><dt>Salary</dt><dd><%= @job_application.salary_range.presence || "Not set" %></dd></div>
         <div><dt>Contact</dt><dd><%= @job_application.contact_name.presence || "Not set" %><% if @job_application.contact_email.present? %><small><%= mail_to @job_application.contact_email %></small><% end %></dd></div>
       </dl>
+      <% if @job_application.follow_up_on.present? %>
+        <div class="detail-actions">
+          <%= button_to "Mark follow-up complete", complete_follow_up_job_application_path(@job_application), method: :patch, class: "button button--small button--secondary" %>
+        </div>
+      <% end %>
       <% if @job_application.description.present? %>
         <div class="prose"><h3>Role notes</h3><%= simple_format(@job_application.description) %></div>
       <% end %>

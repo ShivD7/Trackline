@@ -1,5 +1,5 @@
 class JobApplicationsController < ApplicationController
-  before_action :set_job_application, only: %i[show edit update destroy duplicate]
+  before_action :set_job_application, only: %i[show edit update destroy duplicate complete_follow_up]
 
   def index
     @job_applications = JobApplication.includes(:company).search(params[:q])
@@ -62,6 +62,11 @@ class JobApplicationsController < ApplicationController
     end
 
     redirect_to edit_job_application_path(copy), notice: "Application copied. Review the details before saving."
+  end
+
+  def complete_follow_up
+    @job_application.update!(follow_up_on: nil)
+    redirect_back fallback_location: @job_application, notice: "Follow-up marked complete."
   end
 
   private

@@ -6,7 +6,12 @@
 
   <% if applications.any? %>
     <div class="application-list application-list--roomy">
-      <%= render partial: "shared/application_row", collection: applications, as: :job_application %>
+      <% applications.each do |application| %>
+        <div class="follow-up-row">
+          <%= render "shared/application_row", job_application: application %>
+          <%= button_to "Done", complete_follow_up_job_application_path(application), method: :patch, class: "button button--small button--secondary", form: { data: { turbo_confirm: "Mark this follow-up complete?" } } %>
+        </div>
+      <% end %>
     </div>
   <% else %>
     <div class="empty-state empty-state--compact"><p><%= empty_message %></p></div>
