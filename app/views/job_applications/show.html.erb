@@ -1,0 +1,70 @@
+<% page_title @job_application.role_title %>
+
+<section class="record-hero">
+  <div class="record-identity">
+    <div class="company-avatar company-avatar--large"><%= initials(@job_application.company.name) %></div>
+    <div>
+      <span class="eyebrow"><%= link_to @job_application.company.name, @job_application.company %></span>
+      <h1><%= @job_application.role_title %></h1>
+      <div class="hero-meta">
+        <span class="status-pill status-pill--<%= @job_application.status %>"><%= status_label(@job_application.status) %></span>
+        <span><%= @job_application.location.presence || "Location flexible" %></span>
+        <% if @job_application.work_mode.present? %><span><%= @job_application.work_mode.humanize %></span><% end %>
+      </div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <% if (posting_url = safe_external_url(@job_application.job_url)) %><%= link_to "View posting ↗", posting_url, target: "_blank", rel: "noopener", class: "button button--secondary" %><% end %>
+    <%= link_to "Edit", edit_job_application_path(@job_application), class: "button" %>
+  </div>
+</section>
+
+<div class="record-layout">
+  <div class="record-primary">
+    <section class="content-card detail-card">
+      <div class="section-heading"><div><span class="eyebrow">Snapshot</span><h2>Application details</h2></div></div>
+      <dl class="detail-grid">
+        <div><dt>Applied</dt><dd><%= formatted_date(@job_application.applied_on) %></dd></div>
+        <div><dt>Follow up</dt><dd class="<%= "text-danger" if @job_application.overdue? %>"><%= formatted_date(@job_application.follow_up_on) %></dd></div>
+        <div><dt>Priority</dt><dd><%= @job_application.priority.humanize %></dd></div>
+        <div><dt>Source</dt><dd><%= @job_application.source.presence || "Not set" %></dd></div>
+        <div><dt>Salary</dt><dd><%= @job_application.salary_range.presence || "Not set" %></dd></div>
+        <div><dt>Contact</dt><dd><%= @job_application.contact_name.presence || "Not set" %><% if @job_application.contact_email.present? %><small><%= mail_to @job_application.contact_email %></small><% end %></dd></div>
+      </dl>
+      <% if @job_application.description.present? %>
+        <div class="prose"><h3>Role notes</h3><%= simple_format(@job_application.description) %></div>
+      <% end %>
+    </section>
+
+    <section class="content-card">
+      <div class="section-heading"><div><span class="eyebrow">Journal</span><h2>Notes</h2></div></div>
+      <%= form_with model: [@job_application, @note], class: "note-form" do |form| %>
+        <%= render "shared/errors", object: @note %>
+        <%= form.text_area :body, rows: 3, placeholder: "Add an interview note, recruiter update, or next step…", aria: { label: "Note" } %>
+        <div><%= form.date_field :occurred_on, aria: { label: "Note date" } %><%= form.submit "Add note", class: "button button--small" %></div>
+      <% end %>
+      <div class="notes-list">
+        <% @job_application.notes.each do |note| %>
+          <% next unless note.persisted? %>
+          <article class="note">
+            <div><time><%= formatted_date(note.occurred_on) %></time><%= button_to "Remove", [@job_application, note], method: :delete, class: "link-button", form: { data: { turbo_confirm: "Remove this note?" } } %></div>
+            <%= simple_format(note.body) %>
+          </article>
+        <% end %>
+        <% if @job_application.notes.none?(&:persisted?) %><div class="empty-state empty-state--compact"><p>No notes yet. Add the first update above.</p></div><% end %>
+      </div>
+    </section>
+  </div>
+
+  <aside class="record-secondary">
+    <section class="content-card">
+      <div class="section-heading"><div><span class="eyebrow">History</span><h2>Stage changes</h2></div></div>
+      <ol class="timeline">
+        <% @job_application.stage_changes.each do |change| %>
+          <li><span></span><div><strong><%= status_label(change.to_status) %></strong><small><%= change.from_status ? "From #{status_label(change.from_status)}" : "Application created" %> · <%= time_ago_in_words(change.changed_at) %> ago</small></div></li>
+        <% end %>
+      </ol>
+    </section>
+    <%= button_to "Delete application", @job_application, method: :delete, class: "danger-link", form: { data: { turbo_confirm: "Delete this application and all its notes?" } } %>
+  </aside>
+</div>

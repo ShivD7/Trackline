@@ -1,0 +1,38 @@
+<% page_title "Applications" %>
+
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Pipeline</span>
+    <h1>Applications</h1>
+    <p>Search, filter, and keep every opportunity moving.</p>
+  </div>
+  <%= link_to "Add application", new_job_application_path, class: "button" %>
+</section>
+
+<%= form_with url: job_applications_path, method: :get, class: "filter-bar" do |form| %>
+  <%= form.search_field :q, value: params[:q], placeholder: "Search company, role, or location", class: "search-input", "aria-label": "Search applications" %>
+  <%= form.select :status, options_for_select([["All stages", ""]] + JobApplication::STATUSES.map { |status| [status_label(status), status] }, params[:status]), {}, aria: { label: "Filter by stage" } %>
+  <%= form.select :priority, options_for_select([["All priorities", ""]] + JobApplication::PRIORITIES.map { |priority| [priority.humanize, priority] }, params[:priority]), {}, aria: { label: "Filter by priority" } %>
+  <%= form.select :work_mode, options_for_select([["Any work mode", ""]] + JobApplication::WORK_MODES.map { |mode| [mode.humanize, mode] }, params[:work_mode]), {}, aria: { label: "Filter by work mode" } %>
+  <%= form.select :sort, options_for_select([["Recently updated", "recent"], ["Oldest updated", "oldest"], ["Follow-up date", "follow_up"], ["Company name", "company"]], params[:sort]), {}, aria: { label: "Sort applications" } %>
+  <%= form.submit "Apply", class: "button button--secondary" %>
+  <% if params.values_at(:q, :status, :priority, :work_mode, :sort).any?(&:present?) %>
+    <%= link_to "Clear", job_applications_path, class: "text-link" %>
+  <% end %>
+<% end %>
+
+<section class="content-card">
+  <div class="section-heading">
+    <h2><%= pluralize(@job_applications.size, "opportunity") %></h2>
+  </div>
+  <% if @job_applications.any? %>
+    <div class="application-list application-list--roomy">
+      <%= render partial: "shared/application_row", collection: @job_applications, as: :job_application %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <strong>No applications match those filters.</strong>
+      <p>Try a broader search, or add a new opportunity.</p>
+    </div>
+  <% end %>
+</section>

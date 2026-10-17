@@ -1,0 +1,105 @@
+<% page_title "Overview" %>
+
+<section class="page-header page-header--dashboard">
+  <div>
+    <span class="eyebrow">Your search, in focus</span>
+    <h1>Good <%= Time.current.hour < 12 ? "morning" : Time.current.hour < 18 ? "afternoon" : "evening" %>.</h1>
+    <p>Here’s what needs your attention today.</p>
+  </div>
+  <%= link_to "Add application", new_job_application_path, class: "button" %>
+</section>
+
+<section class="metric-grid" aria-label="Application summary">
+  <article class="metric-card metric-card--ink">
+    <span>Active pipeline</span>
+    <strong><%= @active_applications %></strong>
+    <small><%= pluralize(@total_applications, "application") %> total</small>
+  </article>
+  <article class="metric-card">
+    <span>Response rate</span>
+    <strong><%= @response_rate %>%</strong>
+    <small>Screening or beyond</small>
+  </article>
+  <article class="metric-card">
+    <span>Offers</span>
+    <strong><%= @offers %></strong>
+    <small>Keep the momentum</small>
+  </article>
+  <article class="metric-card <%= "metric-card--warning" if @overdue_count.positive? %>">
+    <span>Overdue follow-ups</span>
+    <strong><%= @overdue_count %></strong>
+    <small><%= @overdue_count.zero? ? "You’re all caught up" : "Worth a quick note today" %></small>
+  </article>
+</section>
+
+<section class="pipeline-card">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">Pipeline</span>
+      <h2>Where things stand</h2>
+    </div>
+    <%= link_to "View all", job_applications_path, class: "text-link" %>
+  </div>
+  <div class="pipeline">
+    <% JobApplication::STATUSES.first(5).each do |status| %>
+      <% count = @status_counts.fetch(status, 0) %>
+      <%= link_to job_applications_path(status: status), class: "pipeline-stage" do %>
+        <span class="pipeline-dot pipeline-dot--<%= status %>"></span>
+        <strong><%= count %></strong>
+        <span><%= status_label(status) %></span>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<div class="dashboard-grid">
+  <section class="content-card">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Recently touched</span>
+        <h2>Applications</h2>
+      </div>
+    </div>
+    <% if @recent_applications.any? %>
+      <div class="application-list">
+        <%= render partial: "shared/application_row", collection: @recent_applications, as: :job_application %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <strong>Your pipeline starts here.</strong>
+        <p>Add a role you’re considering and Trackline will keep the details organized.</p>
+        <%= link_to "Add your first application", new_job_application_path, class: "text-link" %>
+      </div>
+    <% end %>
+  </section>
+
+  <aside class="content-card follow-up-card">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Next two weeks</span>
+        <h2>Follow-ups</h2>
+      </div>
+    </div>
+    <% if @follow_ups.any? %>
+      <div class="follow-up-list">
+        <% @follow_ups.each do |application| %>
+          <%= link_to application, class: class_names("follow-up-item", overdue: application.overdue?) do %>
+            <time datetime="<%= application.follow_up_on.iso8601 %>">
+              <strong><%= application.follow_up_on.strftime("%d") %></strong>
+              <span><%= application.follow_up_on.strftime("%b") %></span>
+            </time>
+            <span>
+              <strong><%= application.company.name %></strong>
+              <small><%= application.role_title %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state empty-state--compact">
+        <strong>No follow-ups due.</strong>
+        <p>Add a date to an active application to see it here.</p>
+      </div>
+    <% end %>
+  </aside>
+</div>

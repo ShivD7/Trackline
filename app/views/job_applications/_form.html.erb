@@ -1,0 +1,92 @@
+<%= form_with model: job_application, class: "record-form" do |form| %>
+  <%= render "shared/errors", object: job_application %>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <span>01</span>
+      <div><h2>The opportunity</h2><p>The basics you’ll use to recognize this role.</p></div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <%= form.label :company_name, "Company" %>
+        <%= form.text_field :company_name, value: job_application.company&.name, required: true, list: "company-names", placeholder: "e.g. Shopify" %>
+        <datalist id="company-names"><% Company.alphabetical.each do |company| %><option value="<%= company.name %>"><% end %></datalist>
+      </div>
+      <div class="field">
+        <%= form.label :role_title %>
+        <%= form.text_field :role_title, required: true, placeholder: "e.g. Backend Developer Intern" %>
+      </div>
+      <div class="field">
+        <%= form.label :location %>
+        <%= form.text_field :location, placeholder: "Toronto, ON" %>
+      </div>
+      <div class="field">
+        <%= form.label :work_mode %>
+        <%= form.select :work_mode, [["Select work mode", ""]] + JobApplication::WORK_MODES.map { |mode| [mode.humanize, mode] } %>
+      </div>
+      <div class="field field--wide">
+        <%= form.label :job_url, "Job posting URL" %>
+        <%= form.url_field :job_url, placeholder: "https://…" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <span>02</span>
+      <div><h2>Pipeline details</h2><p>Give each application a clear next step.</p></div>
+    </div>
+    <div class="field-grid field-grid--three">
+      <div class="field">
+        <%= form.label :status %>
+        <%= form.select :status, JobApplication::STATUSES.map { |status| [status_label(status), status] } %>
+      </div>
+      <div class="field">
+        <%= form.label :priority %>
+        <%= form.select :priority, JobApplication::PRIORITIES.map { |priority| [priority.humanize, priority] } %>
+      </div>
+      <div class="field">
+        <%= form.label :source %>
+        <%= form.text_field :source, placeholder: "Referral, LinkedIn…" %>
+      </div>
+      <div class="field">
+        <%= form.label :applied_on %>
+        <%= form.date_field :applied_on %>
+      </div>
+      <div class="field">
+        <%= form.label :follow_up_on %>
+        <%= form.date_field :follow_up_on %>
+      </div>
+      <div class="field">
+        <%= form.label :salary_range %>
+        <%= form.text_field :salary_range, placeholder: "$70k–$85k" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <span>03</span>
+      <div><h2>Context</h2><p>Save the details you’ll want before an interview.</p></div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <%= form.label :contact_name %>
+        <%= form.text_field :contact_name, placeholder: "Recruiter or hiring manager" %>
+      </div>
+      <div class="field">
+        <%= form.label :contact_email %>
+        <%= form.email_field :contact_email, placeholder: "name@company.com" %>
+      </div>
+      <div class="field field--wide">
+        <%= form.label :description, "Role notes" %>
+        <%= form.text_area :description, rows: 6, placeholder: "Why this role stands out, key requirements, questions to ask…" %>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%= link_to "Cancel", job_application.persisted? ? job_application_path(job_application) : job_applications_path, class: "button button--ghost" %>
+    <%= form.submit job_application.persisted? ? "Save changes" : "Add application", class: "button" %>
+  </div>
+<% end %>

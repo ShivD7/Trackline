@@ -1,0 +1,12 @@
+<%= form_with model: company, class: "record-form record-form--compact" do |form| %>
+  <%= render "shared/errors", object: company %>
+  <section class="form-section">
+    <div class="field-grid">
+      <div class="field field--wide"><%= form.label :name %><%= form.text_field :name, required: true, placeholder: "Company name" %></div>
+      <div class="field"><%= form.label :industry %><%= form.text_field :industry, placeholder: "E-commerce, fintech…" %></div>
+      <div class="field"><%= form.label :headquarters %><%= form.text_field :headquarters, placeholder: "Toronto, ON" %></div>
+      <div class="field field--wide"><%= form.label :website %><%= form.url_field :website, placeholder: "https://company.com" %></div>
+    </div>
+  </section>
+  <div class="form-actions"><%= link_to "Cancel", company.persisted? ? company_path(company) : companies_path, class: "button button--ghost" %><%= form.submit class: "button" %></div>
+<% end %>

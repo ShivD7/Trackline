@@ -1,0 +1,3 @@
+<% page_title "Edit #{@job_application.role_title}" %>
+<section class="page-header page-header--narrow"><div><span class="eyebrow"><%= @job_application.company.name %></span><h1>Edit application</h1><p>Keep the opportunity and its next step current.</p></div></section>
+<%= render "form", job_application: @job_application %>
