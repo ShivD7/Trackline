@@ -4,6 +4,12 @@
   <%= link_to "Add company", new_company_path, class: "button" %>
 </section>
 
+<%= form_with url: companies_path, method: :get, class: "filter-bar filter-bar--compact" do |form| %>
+  <%= form.search_field :q, value: params[:q], placeholder: "Search name, industry, or location", class: "search-input", "aria-label": "Search companies" %>
+  <%= form.submit "Search", class: "button button--secondary" %>
+  <% if params[:q].present? %><%= link_to "Clear", companies_path, class: "text-link" %><% end %>
+<% end %>
+
 <section class="company-grid">
   <% @companies.each do |company| %>
     <%= link_to company, class: "company-card" do %>
@@ -13,6 +19,6 @@
     <% end %>
   <% end %>
   <% if @companies.empty? %>
-    <div class="empty-state content-card"><strong>No companies yet.</strong><p>Companies are also created automatically when you add an application.</p></div>
+    <div class="empty-state content-card"><strong><%= params[:q].present? ? "No companies match that search." : "No companies yet." %></strong><p><%= params[:q].present? ? "Try a company name, industry, or city." : "Companies are also created automatically when you add an application." %></p></div>
   <% end %>
 </section>

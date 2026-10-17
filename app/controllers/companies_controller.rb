@@ -2,7 +2,7 @@ class CompaniesController < ApplicationController
   before_action :set_company, only: %i[show edit update destroy]
 
   def index
-    @companies = Company.left_joins(:job_applications)
+    @companies = Company.search(params[:q]).left_joins(:job_applications)
       .select("companies.*, COUNT(job_applications.id) AS applications_count")
       .group("companies.id")
       .alphabetical

@@ -129,6 +129,7 @@ button, .button { cursor: pointer; }
 .filter-bar { display: flex; align-items: center; gap: 9px; margin-bottom: 16px; }
 .filter-bar input, .filter-bar select { min-height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font-size: 12px; }
 .filter-bar .search-input { min-width: 230px; flex: 1; }
+.filter-bar--compact { max-width: 640px; }
 .quick-filters { display: flex; align-items: center; gap: 7px; margin: -12px 0 15px; overflow-x: auto; padding: 4px 0; }
 .quick-filters > span { margin-right: 3px; color: var(--ink-soft); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
 .filter-chip { padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,253,248,.7); color: var(--ink-soft); font-size: 10px; font-weight: 700; text-decoration: none; white-space: nowrap; }
