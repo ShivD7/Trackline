@@ -69,9 +69,9 @@ Node.js is not required. JavaScript dependencies are delivered through Rails Imp
 ```powershell
 gem install bundler
 bundle install
-bin\rails db:prepare
-bin\rails db:seed
-bin\rails server
+ruby bin\rails db:prepare
+ruby bin\rails db:seed
+ruby bin\rails server
 ```
 
 Open <http://localhost:3000>.
@@ -90,9 +90,9 @@ bin/rails server
 ## Verification
 
 ```powershell
-bin\rails test
-bin\rubocop
-bin\brakeman --no-pager --no-threads
+ruby bin\rails test
+ruby bin\rubocop
+ruby bin\brakeman --no-pager --no-threads
 ```
 
 `--no-threads` avoids a Windows `Process.fork` limitation; it does not reduce the checks Brakeman performs. `db:seed` resets and recreates demonstration records. Do not run it against data you want to keep.
