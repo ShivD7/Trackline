@@ -22,6 +22,7 @@ class JobApplication < ApplicationRecord
   scope :active, -> { where(status: ACTIVE_STATUSES) }
   scope :follow_up_due, -> { active.where(follow_up_on: ..Date.current) }
   scope :upcoming_follow_ups, -> { active.where(follow_up_on: Date.current..14.days.from_now.to_date) }
+  scope :stale, -> { active.where(updated_at: ...14.days.ago) }
 
   def self.search(term)
     return all if term.blank?
@@ -43,6 +44,10 @@ class JobApplication < ApplicationRecord
 
   def overdue?
     active? && follow_up_on.present? && follow_up_on < Date.current
+  end
+
+  def stale?
+    active? && updated_at < 14.days.ago
   end
 
   private

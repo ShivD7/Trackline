@@ -16,6 +16,7 @@
   <%= link_to "Due today", job_applications_path(follow_up: "today"), class: class_names("filter-chip", active: params[:follow_up] == "today") %>
   <%= link_to "Next 14 days", job_applications_path(follow_up: "upcoming"), class: class_names("filter-chip", active: params[:follow_up] == "upcoming") %>
   <%= link_to "Needs a date", job_applications_path(follow_up: "none"), class: class_names("filter-chip", active: params[:follow_up] == "none") %>
+  <%= link_to "Stale 14d+", job_applications_path(follow_up: "stale"), class: class_names("filter-chip", active: params[:follow_up] == "stale") %>
 </nav>
 
 <%= form_with url: job_applications_path, method: :get, class: "filter-bar" do |form| %>

@@ -33,4 +33,15 @@ class JobApplicationTest < ActiveSupport::TestCase
 
     assert_not application.overdue?
   end
+
+  test "detects active applications that have gone stale" do
+    application = JobApplication.create!(company: @company, role_title: "Engineer", status: :applied, applied_on: 20.days.ago)
+    application.update_column(:updated_at, 15.days.ago)
+
+    assert application.stale?
+    assert_includes JobApplication.stale, application
+
+    application.update!(status: :rejected)
+    assert_not application.stale?
+  end
 end

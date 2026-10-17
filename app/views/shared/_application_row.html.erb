@@ -5,7 +5,10 @@
     <span class="application-company"><%= job_application.company.name %> · <%= job_application.location.presence || "Location flexible" %></span>
   </div>
   <div class="application-meta">
-    <span class="status-pill status-pill--<%= job_application.status %>"><%= status_label(job_application.status) %></span>
+    <div class="application-badges">
+      <span class="status-pill status-pill--<%= job_application.status %>"><%= status_label(job_application.status) %></span>
+      <% if job_application.stale? %><span class="attention-pill">Needs update</span><% end %>
+    </div>
     <span class="muted"><%= job_application.follow_up_on ? "Follow up #{formatted_date(job_application.follow_up_on)}" : "Updated #{time_ago_in_words(job_application.updated_at)} ago" %></span>
   </div>
 </article>

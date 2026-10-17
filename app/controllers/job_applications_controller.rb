@@ -105,6 +105,7 @@ class JobApplicationsController < ApplicationController
     when "today" then scope.active.where(follow_up_on: Date.current)
     when "upcoming" then scope.active.where(follow_up_on: Date.tomorrow..14.days.from_now.to_date)
     when "none" then scope.active.where(follow_up_on: nil)
+    when "stale" then scope.stale
     else scope
     end
   end
