@@ -1,5 +1,5 @@
 class JobApplicationsController < ApplicationController
-  before_action :set_job_application, only: %i[show edit update destroy]
+  before_action :set_job_application, only: %i[show edit update destroy duplicate]
 
   def index
     @job_applications = JobApplication.includes(:company).search(params[:q])
@@ -50,6 +50,18 @@ class JobApplicationsController < ApplicationController
   def destroy
     @job_application.destroy!
     redirect_to job_applications_path, notice: "Application removed."
+  end
+
+  def duplicate
+    copy = @job_application.dup
+    copy.assign_attributes(status: :wishlist, applied_on: nil, follow_up_on: nil)
+
+    ApplicationRecord.transaction do
+      copy.save!
+      copy.stage_changes.create!(to_status: copy.status, changed_at: Time.current)
+    end
+
+    redirect_to edit_job_application_path(copy), notice: "Application copied. Review the details before saving."
   end
 
   private

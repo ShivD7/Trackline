@@ -54,4 +54,19 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to job_application_url(@application)
     assert_equal "screening", @application.reload.status
   end
+
+  test "duplicates an application as a fresh wishlist item" do
+    @application.update!(status: :applied, applied_on: Date.current, follow_up_on: 3.days.from_now)
+
+    assert_difference [ "JobApplication.count", "StageChange.count" ], 1 do
+      post duplicate_job_application_url(@application)
+    end
+
+    copy = JobApplication.order(:created_at).last
+    assert_redirected_to edit_job_application_url(copy)
+    assert_equal "wishlist", copy.status
+    assert_nil copy.applied_on
+    assert_nil copy.follow_up_on
+    assert_equal @application.company, copy.company
+  end
 end

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   resources :job_applications do
     get :pipeline, on: :collection
+    post :duplicate, on: :member
     resources :notes, only: %i[create destroy]
   end
   resources :companies
