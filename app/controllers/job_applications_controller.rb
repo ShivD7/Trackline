@@ -9,6 +9,11 @@ class JobApplicationsController < ApplicationController
     @job_applications = @job_applications.order(sort_order)
   end
 
+  def pipeline
+    applications = JobApplication.includes(:company).recent_first
+    @applications_by_status = applications.group_by(&:status)
+  end
+
   def show
     @note = @job_application.notes.build(occurred_on: Date.current)
   end

@@ -1,0 +1,35 @@
+<% page_title "Pipeline" %>
+
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Stage view</span>
+    <h1>Pipeline</h1>
+    <p>Scan every opportunity by its current stage.</p>
+  </div>
+  <%= link_to "Add application", new_job_application_path, class: "button" %>
+</section>
+
+<section class="pipeline-board" aria-label="Application pipeline">
+  <% JobApplication::STATUSES.each do |status| %>
+    <% applications = @applications_by_status.fetch(status, []) %>
+    <div class="pipeline-column">
+      <header>
+        <span class="pipeline-dot pipeline-dot--<%= status %>"></span>
+        <h2><%= status_label(status) %></h2>
+        <span class="count-badge"><%= applications.size %></span>
+      </header>
+      <div class="pipeline-cards">
+        <% applications.each do |application| %>
+          <%= link_to application, class: "pipeline-application" do %>
+            <strong><%= application.role_title %></strong>
+            <span><%= application.company.name %></span>
+            <small><%= application.location.presence || application.work_mode&.humanize || "Location flexible" %></small>
+          <% end %>
+        <% end %>
+        <% if applications.empty? %>
+          <p class="pipeline-empty">No applications</p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</section>

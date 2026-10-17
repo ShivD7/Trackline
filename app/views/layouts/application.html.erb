@@ -34,7 +34,8 @@
 
         <nav class="primary-nav" aria-label="Primary navigation">
           <%= nav_link "Overview", root_path %>
-          <%= nav_link "Applications", job_applications_path, match: "/job_applications" %>
+          <%= nav_link "Applications", job_applications_path %>
+          <%= nav_link "Pipeline", pipeline_job_applications_path %>
           <%= nav_link "Follow-ups", follow_ups_path %>
           <%= nav_link "Companies", companies_path, match: "/companies" %>
         </nav>

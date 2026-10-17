@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "follow_ups", to: "dashboard#follow_ups", as: :follow_ups
 
   resources :job_applications do
+    get :pipeline, on: :collection
     resources :notes, only: %i[create destroy]
   end
   resources :companies

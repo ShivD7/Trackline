@@ -13,6 +13,14 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a", text: "Rails Engineer"
   end
 
+  test "shows applications on the pipeline board" do
+    get pipeline_job_applications_url
+
+    assert_response :success
+    assert_select ".pipeline-column", count: JobApplication::STATUSES.size
+    assert_select ".pipeline-application", text: /Rails Engineer/
+  end
+
   test "creates an application and its initial history" do
     assert_difference [ "JobApplication.count", "Company.count", "StageChange.count" ], 1 do
       post job_applications_url, params: {
