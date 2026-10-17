@@ -1,4 +1,4 @@
-<%= form_with model: job_application, class: "record-form" do |form| %>
+<%= form_with model: job_application, class: "record-form", data: { controller: "application-form" } do |form| %>
   <%= render "shared/errors", object: job_application %>
 
   <section class="form-section">
@@ -39,7 +39,7 @@
     <div class="field-grid field-grid--three">
       <div class="field">
         <%= form.label :status %>
-        <%= form.select :status, JobApplication::STATUSES.map { |status| [status_label(status), status] } %>
+        <%= form.select :status, JobApplication::STATUSES.map { |status| [status_label(status), status] }, {}, data: { application_form_target: "status", action: "change->application-form#syncAppliedDate" } %>
       </div>
       <div class="field">
         <%= form.label :priority %>
@@ -51,7 +51,8 @@
       </div>
       <div class="field">
         <%= form.label :applied_on %>
-        <%= form.date_field :applied_on %>
+        <%= form.date_field :applied_on, data: { application_form_target: "appliedOn" } %>
+        <small class="field-hint">Filled automatically when you move beyond Wishlist.</small>
       </div>
       <div class="field">
         <%= form.label :follow_up_on %>

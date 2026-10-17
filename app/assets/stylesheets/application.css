@@ -147,6 +147,7 @@ button, .button { cursor: pointer; }
 .field { display: grid; gap: 7px; }
 .field--wide { grid-column: 1 / -1; }
 .field label { color: #424d45; font-size: 11px; font-weight: 750; }
+.field-hint { color: var(--ink-soft); font-size: 9px; line-height: 1.4; }
 .field input, .field select, .field textarea, .note-form textarea, .note-form input { width: 100%; min-height: 44px; padding: 11px 12px; border: 1px solid #cecec7; border-radius: 9px; background: #fffefa; color: var(--ink); outline: none; }
 .field textarea, .note-form textarea { resize: vertical; line-height: 1.55; }
 .field input:focus, .field select:focus, .field textarea:focus, .note-form textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(31,92,66,.1); }
