@@ -1,0 +1,16 @@
+<% page_title "Follow-ups" %>
+
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Action list</span>
+    <h1>Follow-ups</h1>
+    <p>See every conversation that needs a next step.</p>
+  </div>
+  <%= link_to "View applications", job_applications_path, class: "button button--secondary" %>
+</section>
+
+<div class="follow-up-sections">
+  <%= render "follow_up_group", title: "Overdue", applications: @overdue_follow_ups, tone: "danger", empty_message: "Nothing overdue." %>
+  <%= render "follow_up_group", title: "Today", applications: @today_follow_ups, tone: "today", empty_message: "No follow-ups scheduled for today." %>
+  <%= render "follow_up_group", title: "Coming up", applications: @upcoming_follow_ups, tone: "upcoming", empty_message: "No upcoming follow-ups yet." %>
+</div>

@@ -102,6 +102,12 @@ button, .button { cursor: pointer; }
 .follow-up-item > span strong { font-size: 12px; }
 .follow-up-item small { color: var(--ink-soft); }
 .follow-up-item.overdue time { background: #f1dcda; color: var(--danger); }
+.follow-up-sections { display: grid; gap: 18px; }
+.follow-up-section { border-top: 4px solid var(--line); }
+.follow-up-section--danger { border-top-color: #d88880; }
+.follow-up-section--today { border-top-color: var(--gold); }
+.follow-up-section--upcoming { border-top-color: var(--green); }
+.count-badge { display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 999px; background: #eeece5; color: var(--ink-soft); font-size: 11px; font-weight: 800; }
 
 .filter-bar { display: flex; align-items: center; gap: 9px; margin-bottom: 16px; }
 .filter-bar input, .filter-bar select { min-height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font-size: 12px; }

@@ -1,0 +1,14 @@
+<section class="content-card follow-up-section follow-up-section--<%= tone %>">
+  <div class="section-heading">
+    <h2><%= title %></h2>
+    <span class="count-badge"><%= applications.size %></span>
+  </div>
+
+  <% if applications.any? %>
+    <div class="application-list application-list--roomy">
+      <%= render partial: "shared/application_row", collection: applications, as: :job_application %>
+    </div>
+  <% else %>
+    <div class="empty-state empty-state--compact"><p><%= empty_message %></p></div>
+  <% end %>
+</section>
