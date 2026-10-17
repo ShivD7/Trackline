@@ -30,7 +30,18 @@
         <div><dt>Priority</dt><dd><%= @job_application.priority.humanize %></dd></div>
         <div><dt>Source</dt><dd><%= @job_application.source.presence || "Not set" %></dd></div>
         <div><dt>Salary</dt><dd><%= @job_application.salary_range.presence || "Not set" %></dd></div>
-        <div><dt>Contact</dt><dd><%= @job_application.contact_name.presence || "Not set" %><% if @job_application.contact_email.present? %><small><%= mail_to @job_application.contact_email %></small><% end %></dd></div>
+        <div>
+          <dt>Contact</dt>
+          <dd>
+            <%= @job_application.contact_name.presence || "Not set" %>
+            <% if @job_application.contact_email.present? %>
+              <small class="contact-actions">
+                <%= mail_to @job_application.contact_email %>
+                <button type="button" class="copy-button" data-controller="clipboard" data-clipboard-text-value="<%= @job_application.contact_email %>" data-action="clipboard#copy">Copy</button>
+              </small>
+            <% end %>
+          </dd>
+        </div>
       </dl>
       <% if @job_application.follow_up_on.present? %>
         <div class="detail-actions">

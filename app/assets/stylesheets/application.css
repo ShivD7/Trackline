@@ -169,6 +169,8 @@ button, .button { cursor: pointer; }
 .detail-grid dt { color: var(--ink-soft); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .detail-grid dd { margin: 8px 0 0; font-size: 13px; font-weight: 700; }
 .detail-grid dd small { display: block; margin-top: 4px; font-weight: 500; }
+.contact-actions { display: flex !important; align-items: center; gap: 7px; }
+.copy-button { padding: 0; border: 0; background: transparent; color: var(--green); font-size: 9px; font-weight: 800; }
 .detail-actions { display: flex; justify-content: flex-end; margin-top: 14px; }
 .prose { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: #3f4b43; font-size: 13px; line-height: 1.7; }
 .prose h3 { color: var(--ink); font: 500 18px Georgia, serif; }
