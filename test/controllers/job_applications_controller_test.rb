@@ -41,6 +41,17 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".application-row", count: 1
   end
 
+  test "filters applications by follow up timing" do
+    @application.update!(status: :applied, applied_on: 2.days.ago, follow_up_on: 1.day.ago)
+    JobApplication.create!(company: @company, role_title: "Later", status: :applied, applied_on: Date.current, follow_up_on: 4.days.from_now)
+
+    get job_applications_url, params: { follow_up: "overdue" }
+
+    assert_response :success
+    assert_select ".application-row", count: 1
+    assert_select ".application-title", text: "Rails Engineer"
+  end
+
   test "updates status through the history service" do
     assert_difference -> { @application.stage_changes.count }, 1 do
       patch job_application_url(@application), params: {

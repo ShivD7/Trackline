@@ -6,6 +6,7 @@ class JobApplicationsController < ApplicationController
     @job_applications = @job_applications.where(status: params[:status]) if params[:status].present?
     @job_applications = @job_applications.where(priority: params[:priority]) if params[:priority].present?
     @job_applications = @job_applications.where(work_mode: params[:work_mode]) if params[:work_mode].present?
+    @job_applications = filter_by_follow_up(@job_applications)
     @job_applications = @job_applications.order(sort_order)
   end
 
@@ -96,5 +97,15 @@ class JobApplicationsController < ApplicationController
       "follow_up" => { follow_up_on: :asc },
       "company" => { companies: { name: :asc } }
     }.fetch(params[:sort], { updated_at: :desc })
+  end
+
+  def filter_by_follow_up(scope)
+    case params[:follow_up]
+    when "overdue" then scope.active.where(follow_up_on: ...Date.current)
+    when "today" then scope.active.where(follow_up_on: Date.current)
+    when "upcoming" then scope.active.where(follow_up_on: Date.tomorrow..14.days.from_now.to_date)
+    when "none" then scope.active.where(follow_up_on: nil)
+    else scope
+    end
   end
 end
