@@ -2,7 +2,8 @@ require "test_helper"
 
 class JobApplicationTest < ActiveSupport::TestCase
   setup do
-    @company = Company.create!(name: "Acme")
+    @user = users(:one)
+    @company = Company.create!(user: @user, name: "Acme")
   end
 
   test "requires an applied date after leaving the wishlist" do
@@ -14,7 +15,7 @@ class JobApplicationTest < ActiveSupport::TestCase
 
   test "search matches company, role, and location" do
     toronto = JobApplication.create!(company: @company, role_title: "Platform Engineer", location: "Toronto")
-    other = JobApplication.create!(company: Company.create!(name: "Elsewhere"), role_title: "Designer", location: "Montreal")
+    other = JobApplication.create!(company: Company.create!(user: @user, name: "Elsewhere"), role_title: "Designer", location: "Montreal")
 
     assert_equal [ toronto ], JobApplication.search("platform")
     assert_equal [ toronto ], JobApplication.search("acme")

@@ -2,7 +2,9 @@ require "test_helper"
 
 class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @company = Company.create!(name: "Acme")
+    @user = users(:one)
+    sign_in_as(@user)
+    @company = @user.companies.create!(name: "Acme")
     @application = JobApplication.create!(company: @company, role_title: "Rails Engineer")
   end
 
@@ -104,5 +106,14 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to job_application_url(@application)
     assert_nil @application.reload.follow_up_on
+  end
+
+  test "does not expose another user's application" do
+    sign_out
+    sign_in_as(users(:two))
+
+    get job_application_url(@application)
+
+    assert_response :not_found
   end
 end

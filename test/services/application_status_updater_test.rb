@@ -2,7 +2,7 @@ require "test_helper"
 
 class ApplicationStatusUpdaterTest < ActiveSupport::TestCase
   test "records a stage change when status changes" do
-    application = JobApplication.create!(company: Company.create!(name: "Acme"), role_title: "Engineer")
+    application = JobApplication.create!(company: Company.create!(user: users(:one), name: "Acme"), role_title: "Engineer")
 
     assert_difference -> { application.stage_changes.count }, 1 do
       assert ApplicationStatusUpdater.call(
@@ -17,7 +17,7 @@ class ApplicationStatusUpdaterTest < ActiveSupport::TestCase
   end
 
   test "does not record history for an invalid update" do
-    application = JobApplication.create!(company: Company.create!(name: "Acme"), role_title: "Engineer")
+    application = JobApplication.create!(company: Company.create!(user: users(:one), name: "Acme"), role_title: "Engineer")
 
     assert_no_difference -> { application.stage_changes.count } do
       assert_not ApplicationStatusUpdater.call(application: application, attributes: { status: "applied", applied_on: nil })
