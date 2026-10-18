@@ -3,13 +3,20 @@ StageChange.delete_all
 Note.delete_all
 JobApplication.delete_all
 Company.delete_all
+Session.delete_all
+User.delete_all
+
+demo_user = User.create!(
+  email_address: ENV.fetch("TRACKLINE_DEMO_EMAIL", "demo@trackline.app"),
+  password: ENV.fetch("TRACKLINE_DEMO_PASSWORD", "password123")
+)
 
 companies = {
-  shopify: Company.create!(name: "Shopify", website: "https://www.shopify.com", industry: "Commerce", headquarters: "Ottawa, ON"),
-  wealthsimple: Company.create!(name: "Wealthsimple", website: "https://www.wealthsimple.com", industry: "Fintech", headquarters: "Toronto, ON"),
-  notion: Company.create!(name: "Notion", website: "https://www.notion.so", industry: "Productivity", headquarters: "San Francisco, CA"),
-  linear: Company.create!(name: "Linear", website: "https://linear.app", industry: "Developer tools", headquarters: "San Francisco, CA"),
-  figma: Company.create!(name: "Figma", website: "https://www.figma.com", industry: "Design software", headquarters: "San Francisco, CA")
+  shopify: demo_user.companies.create!(name: "Shopify", website: "https://www.shopify.com", industry: "Commerce", headquarters: "Ottawa, ON"),
+  wealthsimple: demo_user.companies.create!(name: "Wealthsimple", website: "https://www.wealthsimple.com", industry: "Fintech", headquarters: "Toronto, ON"),
+  notion: demo_user.companies.create!(name: "Notion", website: "https://www.notion.so", industry: "Productivity", headquarters: "San Francisco, CA"),
+  linear: demo_user.companies.create!(name: "Linear", website: "https://linear.app", industry: "Developer tools", headquarters: "San Francisco, CA"),
+  figma: demo_user.companies.create!(name: "Figma", website: "https://www.figma.com", industry: "Design software", headquarters: "San Francisco, CA")
 }
 
 applications = [
@@ -56,5 +63,5 @@ shopify = JobApplication.find_by!(role_title: "Backend Developer Intern")
 shopify.notes.create!(occurred_on: 6.days.ago.to_date, body: "Recruiter screen went well. Team values pragmatic decisions and clear written communication.")
 shopify.notes.create!(occurred_on: 2.days.ago.to_date, body: "Technical interview booked. Review Active Record query patterns and prepare two thoughtful questions about team ownership.")
 
-puts "Created #{Company.count} companies, #{JobApplication.count} applications, and #{Note.count} notes."
+puts "Created #{Company.count} companies, #{JobApplication.count} applications, and #{Note.count} notes for #{demo_user.email_address}."
 #   end

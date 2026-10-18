@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_17_030400) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_18_181400) do
   create_table "companies", force: :cascade do |t|
     t.string "name", null: false
     t.string "website"
@@ -18,7 +18,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_030400) do
     t.string "headquarters"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index "lower(name)", name: "index_companies_on_lower_name", unique: true
+    t.integer "user_id"
+    t.index "user_id, lower(name)", name: "index_companies_on_user_and_lower_name", unique: true
+    t.index ["user_id"], name: "index_companies_on_user_id"
   end
 
   create_table "job_applications", force: :cascade do |t|
@@ -53,6 +55,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_030400) do
     t.index ["job_application_id"], name: "index_notes_on_job_application_id"
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "stage_changes", force: :cascade do |t|
     t.integer "job_application_id", null: false
     t.string "from_status"
@@ -64,7 +75,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_030400) do
     t.index ["job_application_id"], name: "index_stage_changes_on_job_application_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+  end
+
+  add_foreign_key "companies", "users"
   add_foreign_key "job_applications", "companies"
   add_foreign_key "notes", "job_applications"
+  add_foreign_key "sessions", "users"
   add_foreign_key "stage_changes", "job_applications"
 end
