@@ -1,0 +1,17 @@
+<% page_title "Reset password" %>
+
+<div class="auth-heading">
+  <span class="eyebrow">Account recovery</span>
+  <h1>Reset your password</h1>
+  <p>Enter your email and we’ll send you a secure reset link.</p>
+</div>
+
+<%= form_with url: passwords_path, class: "auth-form" do |form| %>
+  <div class="field">
+    <%= form.label :email_address, "Email address" %>
+    <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@example.com", value: params[:email_address] %>
+  </div>
+  <%= form.submit "Email reset instructions", class: "button auth-submit" %>
+<% end %>
+
+<p class="auth-switch"><%= link_to "Back to sign in", new_session_path %></p>

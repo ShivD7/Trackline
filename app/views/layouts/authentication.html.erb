@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Trackline · Job application tracker" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="A focused, private workspace for managing your job search.">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="icon" href="/icon.png" type="image/png">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-intro" aria-label="About Trackline">
+        <%= link_to new_session_path, class: "brand" do %>
+          <span class="brand-mark" aria-hidden="true">T</span>
+          <span>Trackline</span>
+        <% end %>
+        <div>
+          <span class="eyebrow">Job search, clearly managed</span>
+          <h2>Keep every opportunity moving.</h2>
+          <p>A calm, private command center for applications, conversations, and the next follow-up.</p>
+        </div>
+      </section>
+
+      <section class="auth-panel">
+        <div class="auth-card">
+          <% flash.each do |type, message| %>
+            <div class="flash flash--<%= type %>" role="status"><%= message %></div>
+          <% end %>
+          <%= yield %>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

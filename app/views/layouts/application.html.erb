@@ -46,12 +46,20 @@
           <strong>Small steps compound.</strong>
           <p>Keep every follow-up and conversation in one calm place.</p>
         </div>
+
+        <div class="sidebar-account">
+          <span class="account-email" title="<%= current_user.email_address %>"><%= current_user.email_address %></span>
+          <%= button_to "Sign out", session_path, method: :delete, class: "link-button" %>
+        </div>
       </aside>
 
       <main class="main-content" id="main-content">
         <header class="mobile-header">
           <%= link_to "Trackline", root_path, class: "brand brand--mobile" %>
-          <%= link_to "Add", new_job_application_path, class: "button button--small" %>
+          <div class="mobile-header-actions">
+            <%= link_to "Add", new_job_application_path, class: "button button--small" %>
+            <%= button_to "Sign out", session_path, method: :delete, class: "link-button" %>
+          </div>
         </header>
 
         <% flash.each do |type, message| %>

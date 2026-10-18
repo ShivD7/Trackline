@@ -1,0 +1,19 @@
+<% page_title "Choose a new password" %>
+
+<div class="auth-heading">
+  <span class="eyebrow">Account recovery</span>
+  <h1>Choose a new password</h1>
+  <p>Use at least eight characters and keep it unique to Trackline.</p>
+</div>
+
+<%= form_with url: password_path(params[:token]), method: :put, class: "auth-form" do |form| %>
+  <div class="field">
+    <%= form.label :password, "New password" %>
+    <%= form.password_field :password, required: true, autofocus: true, autocomplete: "new-password", placeholder: "At least 8 characters", minlength: 8, maxlength: 72 %>
+  </div>
+  <div class="field">
+    <%= form.label :password_confirmation, "Confirm new password" %>
+    <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat your password", minlength: 8, maxlength: 72 %>
+  </div>
+  <%= form.submit "Update password", class: "button auth-submit" %>
+<% end %>

@@ -1,0 +1,24 @@
+<% page_title "Sign in" %>
+
+<div class="auth-heading">
+  <span class="eyebrow">Welcome back</span>
+  <h1>Sign in to Trackline</h1>
+  <p>Your applications, notes, and follow-ups are waiting.</p>
+</div>
+
+<%= form_with url: session_path, class: "auth-form" do |form| %>
+  <div class="field">
+    <%= form.label :email_address, "Email address" %>
+    <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@example.com", value: params[:email_address] %>
+  </div>
+  <div class="field">
+    <div class="field-label-row">
+      <%= form.label :password %>
+      <%= link_to "Forgot password?", new_password_path, class: "text-link" %>
+    </div>
+    <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %>
+  </div>
+  <%= form.submit "Sign in", class: "button auth-submit" %>
+<% end %>
+
+<p class="auth-switch">New to Trackline? <%= link_to "Create an account", new_registration_path %></p>
