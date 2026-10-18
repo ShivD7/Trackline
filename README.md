@@ -5,6 +5,7 @@ Trackline is a job application tracker that keeps every opportunity organized in
 ## What Trackline does
 
 - Tracks roles from the initial wishlist through application, screening, interviews, offers, rejection, or withdrawal
+- Provides private password-protected accounts so every user sees only their own job-search data
 - Organizes opportunities by company, job title, location, work mode, priority, salary range, and application date
 - Shows active applications, response rate, offers, and overdue follow-ups on a dashboard
 - Highlights upcoming and missed follow-up dates so important conversations are not forgotten
