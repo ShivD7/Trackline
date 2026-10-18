@@ -6,7 +6,7 @@ class NotesController < ApplicationController
     if @note.save
       redirect_to @job_application, notice: "Note added."
     else
-      @job_application = JobApplication.includes(:company, :notes, :stage_changes).find(@job_application.id)
+      @job_application = current_user.job_applications.includes(:company, :notes, :stage_changes).find(@job_application.id)
       render "job_applications/show", status: :unprocessable_entity
     end
   end
@@ -19,7 +19,7 @@ class NotesController < ApplicationController
   private
 
   def set_job_application
-    @job_application = JobApplication.find(params[:job_application_id])
+    @job_application = current_user.job_applications.find(params[:job_application_id])
   end
 
   def note_params

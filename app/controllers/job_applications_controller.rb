@@ -2,7 +2,7 @@ class JobApplicationsController < ApplicationController
   before_action :set_job_application, only: %i[show edit update destroy duplicate complete_follow_up]
 
   def index
-    @job_applications = JobApplication.includes(:company).search(params[:q])
+    @job_applications = current_user.job_applications.includes(:company).search(params[:q])
     @job_applications = @job_applications.where(status: params[:status]) if params[:status].present?
     @job_applications = @job_applications.where(priority: params[:priority]) if params[:priority].present?
     @job_applications = @job_applications.where(work_mode: params[:work_mode]) if params[:work_mode].present?
@@ -11,7 +11,7 @@ class JobApplicationsController < ApplicationController
   end
 
   def pipeline
-    applications = JobApplication.includes(:company).recent_first
+    applications = current_user.job_applications.includes(:company).recent_first
     @applications_by_status = applications.group_by(&:status)
   end
 
@@ -21,7 +21,7 @@ class JobApplicationsController < ApplicationController
 
   def new
     @job_application = JobApplication.new(status: :wishlist, priority: :medium)
-    @job_application.company = Company.find_by(id: params[:company_id]) if params[:company_id].present?
+    @job_application.company = current_user.companies.find_by(id: params[:company_id]) if params[:company_id].present?
   end
 
   def create
@@ -74,7 +74,7 @@ class JobApplicationsController < ApplicationController
   private
 
   def set_job_application
-    @job_application = JobApplication.includes(:company, :notes, :stage_changes).find(params[:id])
+    @job_application = current_user.job_applications.includes(:company, :notes, :stage_changes).find(params[:id])
   end
 
   def job_application_params
@@ -89,7 +89,7 @@ class JobApplicationsController < ApplicationController
     name = job_application_params[:company_name].to_s.squish
     return @job_application.company if name.blank? && @job_application.persisted?
 
-    Company.where("lower(name) = ?", name.downcase).first_or_initialize.tap { |company| company.name = name }
+    current_user.companies.where("lower(name) = ?", name.downcase).first_or_initialize.tap { |company| company.name = name }
   end
 
   def sort_applications(scope)

@@ -2,7 +2,7 @@ class CompaniesController < ApplicationController
   before_action :set_company, only: %i[show edit update destroy]
 
   def index
-    @companies = Company.search(params[:q]).left_joins(:job_applications)
+    @companies = current_user.companies.search(params[:q]).left_joins(:job_applications)
       .select("companies.*, COUNT(job_applications.id) AS applications_count")
       .group("companies.id")
       .alphabetical
@@ -13,11 +13,11 @@ class CompaniesController < ApplicationController
   end
 
   def new
-    @company = Company.new
+    @company = current_user.companies.build
   end
 
   def create
-    @company = Company.new(company_params)
+    @company = current_user.companies.build(company_params)
     if @company.save
       redirect_to @company, notice: "Company added."
     else
@@ -47,7 +47,7 @@ class CompaniesController < ApplicationController
   private
 
   def set_company
-    @company = Company.find(params[:id])
+    @company = current_user.companies.find(params[:id])
   end
 
   def company_params
