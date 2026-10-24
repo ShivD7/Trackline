@@ -1,0 +1,11 @@
+@echo off
+rem Optional settings: copy this file to config\local.cmd and edit that copy.
+set "PORT=3001"
+rem Reset messages are saved locally unless SMTP_ADDRESS is set.
+rem set "SMTP_ADDRESS=smtp.your-provider.com"
+rem set "SMTP_PORT=587"
+rem set "SMTP_USERNAME=your-username"
+rem set "SMTP_PASSWORD=your-app-password"
+rem set "TRACKLINE_MAIL_FROM=Trackline <you@your-domain.com>"
+rem Optional second-disk backup destination. Keep a separate copy off this computer.
+rem set "TRACKLINE_BACKUP_DIR=D:\Trackline Backups"

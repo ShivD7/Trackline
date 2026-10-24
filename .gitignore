@@ -2,6 +2,7 @@
 /.env*
 /.ruby-lsp
 /config/master.key
+/config/local.cmd
 /log/*
 !/log/.keep
 /storage/*
