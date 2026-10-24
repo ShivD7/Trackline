@@ -1,10 +1,14 @@
-puts "Resetting demo data…"
-StageChange.delete_all
-Note.delete_all
-JobApplication.delete_all
-Company.delete_all
-Session.delete_all
-User.delete_all
+unless ENV["TRACKLINE_DEMO"] == "1" && Rails.env.development?
+  puts "Trackline starts empty. Set TRACKLINE_DEMO=1 in development to add sample data to an empty database."
+  return
+end
+
+if User.exists? || Company.exists? || JobApplication.exists?
+  puts "Existing data found. Skipping demo data; nothing was changed."
+  return
+end
+
+puts "Adding demo data…"
 
 demo_user = User.create!(
   email_address: ENV.fetch("TRACKLINE_DEMO_EMAIL", "demo@trackline.app"),
@@ -64,4 +68,3 @@ shopify.notes.create!(occurred_on: 6.days.ago.to_date, body: "Recruiter screen w
 shopify.notes.create!(occurred_on: 2.days.ago.to_date, body: "Technical interview booked. Review Active Record query patterns and prepare two thoughtful questions about team ownership.")
 
 puts "Created #{Company.count} companies, #{JobApplication.count} applications, and #{Note.count} notes for #{demo_user.email_address}."
-#   end
