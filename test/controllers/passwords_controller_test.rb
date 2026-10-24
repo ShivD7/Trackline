@@ -9,8 +9,9 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create" do
-    post passwords_path, params: { email_address: @user.email_address }
-    assert_enqueued_email_with PasswordsMailer, :reset, args: [ @user ]
+    assert_emails 1 do
+      post passwords_path, params: { email_address: @user.email_address }
+    end
     assert_redirected_to new_session_path
 
     follow_redirect!
@@ -40,24 +41,46 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "update" do
+    @user.sessions.create!
+    token = @user.password_reset_token
     assert_changes -> { @user.reload.password_digest } do
-      put password_path(@user.password_reset_token), params: { password: "new-password", password_confirmation: "new-password" }
+      put password_path(token), params: { password: "new-password", password_confirmation: "new-password" }
       assert_redirected_to new_session_path
     end
 
     follow_redirect!
     assert_notice "Password has been reset"
+    assert_empty @user.sessions
+    assert_nil User.find_by_password_reset_token(token)
   end
 
   test "update with non matching passwords" do
     token = @user.password_reset_token
     assert_no_changes -> { @user.reload.password_digest } do
       put password_path(token), params: { password: "not-matching", password_confirmation: "different-value" }
-      assert_redirected_to edit_password_path(token)
+      assert_response :unprocessable_entity
     end
 
-    follow_redirect!
-    assert_notice "Passwords did not match"
+    assert_select ".form-errors", /confirmation/i
+  end
+
+  test "rejects blank and short passwords without revoking valid sessions" do
+    @user.sessions.create!
+    [ "", "short" ].each do |password|
+      assert_no_changes -> { @user.reload.password_digest } do
+        put password_path(@user.password_reset_token), params: { password: password, password_confirmation: password }
+      end
+      assert_response :unprocessable_entity
+      assert_equal 1, @user.sessions.count
+    end
+  end
+
+  test "expired reset links cannot change passwords" do
+    token = @user.password_reset_token
+    travel 16.minutes do
+      put password_path(token), params: { password: "new-password", password_confirmation: "new-password" }
+      assert_redirected_to new_password_path
+    end
   end
 
   private

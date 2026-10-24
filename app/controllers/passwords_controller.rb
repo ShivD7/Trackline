@@ -9,21 +9,33 @@ class PasswordsController < ApplicationController
 
   def create
     if user = User.find_by(email_address: params[:email_address])
-      PasswordsMailer.reset(user).deliver_later
+      PasswordsMailer.reset(user).deliver_now
     end
 
     redirect_to new_session_path, notice: "Password reset instructions sent (if user with that email address exists)."
+  rescue StandardError => error
+    Rails.logger.error("Password reset delivery failed: #{error.class.name}")
+    redirect_to new_password_path, alert: "Unable to send reset instructions. Please try again later."
   end
 
   def edit
   end
 
   def update
-    if @user.update(params.permit(:password, :password_confirmation))
-      @user.sessions.destroy_all
+    @user.assign_attributes(params.permit(:password, :password_confirmation))
+    if params[:password].blank?
+      @user.errors.add(:password, "can't be blank")
+      render :edit, status: :unprocessable_entity
+    elsif @user.valid?
+      User.transaction do
+        @user.save!
+        @user.sessions.destroy_all
+      end
+      cookies.delete(:session_id)
+      reset_session
       redirect_to new_session_path, notice: "Password has been reset."
     else
-      redirect_to edit_password_path(params[:token]), alert: "Passwords did not match."
+      render :edit, status: :unprocessable_entity
     end
   end
 

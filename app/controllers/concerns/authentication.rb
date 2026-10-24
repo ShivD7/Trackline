@@ -43,6 +43,9 @@ module Authentication
     end
 
     def start_new_session_for(user)
+      return_to = session[:return_to_after_authenticating]
+      reset_session
+      session[:return_to_after_authenticating] = return_to if return_to
       user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
         cookies.signed.permanent[:session_id] = {
@@ -56,6 +59,8 @@ module Authentication
 
     def terminate_session
       Current.session.destroy
+      Current.reset
+      reset_session
       cookies.delete(:session_id)
     end
 end
