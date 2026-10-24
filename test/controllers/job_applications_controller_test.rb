@@ -53,6 +53,17 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to job_application_url(JobApplication.order(:created_at).last)
   end
 
+  test "invalid applications show errors without leaving partial records" do
+    assert_no_difference [ "Company.count", "JobApplication.count", "StageChange.count" ] do
+      post job_applications_url, params: {
+        job_application: { company_name: "New company", role_title: "", status: "wishlist", priority: "medium" }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select ".form-errors", /Role title/
+  end
+
   test "filters applications by search" do
     get job_applications_url, params: { q: "Acme" }
 

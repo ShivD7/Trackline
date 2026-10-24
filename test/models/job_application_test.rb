@@ -13,6 +13,16 @@ class JobApplicationTest < ActiveSupport::TestCase
     assert_includes application.errors[:applied_on], "is required once an application leaves the wishlist"
   end
 
+  test "rejects malformed posting links instead of saving unusable URLs" do
+    application = @company.job_applications.build(role_title: "Engineer")
+    [ "https://", "javascript:alert(1)", "text https://example.com", "https://user:secret@example.com" ].each do |url|
+      application.job_url = url
+      assert_not application.valid?, url
+    end
+    application.job_url = "https://example.com/jobs/123?source=careers"
+    assert application.valid?
+  end
+
   test "search matches company, role, and location" do
     toronto = JobApplication.create!(company: @company, role_title: "Platform Engineer", location: "Toronto")
     other = JobApplication.create!(company: Company.create!(user: @user, name: "Elsewhere"), role_title: "Designer", location: "Montreal")

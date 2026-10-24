@@ -15,7 +15,7 @@ class JobApplication < ApplicationRecord
   validates :role_title, presence: true, length: { maximum: 120 }
   validates :work_mode, inclusion: { in: WORK_MODES }, allow_blank: true
   validates :contact_email, format: URI::MailTo::EMAIL_REGEXP, allow_blank: true
-  validates :job_url, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true
+  validates :job_url, http_url: true, allow_blank: true
   validate :applied_date_matches_status
 
   scope :recent_first, -> { order(updated_at: :desc) }

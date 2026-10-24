@@ -28,8 +28,7 @@ class JobApplicationsController < ApplicationController
     @job_application = JobApplication.new(job_application_params.except(:company_name))
     @job_application.company = company_from_params
 
-    if @job_application.save
-      @job_application.stage_changes.create!(to_status: @job_application.status, changed_at: Time.current)
+    if save_with_initial_history
       redirect_to @job_application, notice: "Application added to your pipeline."
     else
       render :new, status: :unprocessable_entity
@@ -72,6 +71,16 @@ class JobApplicationsController < ApplicationController
   end
 
   private
+
+  def save_with_initial_history
+    ApplicationRecord.transaction do
+      @job_application.save!
+      @job_application.stage_changes.create!(to_status: @job_application.status, changed_at: Time.current)
+    end
+    true
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
 
   def set_job_application
     @job_application = current_user.job_applications.includes(:company, :notes, :stage_changes).find(params[:id])
