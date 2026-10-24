@@ -15,9 +15,12 @@ Trackline is a job application tracker that keeps every opportunity organized in
 - Records every stage change in a permanent application timeline
 - Groups multiple job opportunities under the same company
 - Works across desktop and mobile screen sizes
+- Supports password recovery and local database backup/restore
 
 ## Typical workflow
 
 Add a company and role, record the application details, and choose its current stage. As the hiring process moves forward, update the stage, add notes after conversations, and schedule the next follow-up. Trackline keeps the latest status visible while preserving the full history of the application.
 
 The dashboard brings the entire search together, showing active opportunities, recent activity, pipeline health, and the applications that need attention next.
+
+For installation, Windows startup, password recovery, backups, and architecture, see the [usage guide](docs/USAGE.md).

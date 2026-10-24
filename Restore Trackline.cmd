@@ -1,5 +1,6 @@
 @echo off
 cd /d "%~dp0"
+if exist "config\local.cmd" call "config\local.cmd"
 echo Stop Trackline first. A safety backup will be saved before restoring.
 echo.
 ruby script/data.rb list

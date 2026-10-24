@@ -3,6 +3,7 @@ require_relative "../lib/trackline/database_backup"
 
 abort "This helper manages the local development database only." unless ENV.fetch("RAILS_ENV", "development") == "development"
 root = File.expand_path("..", __dir__)
+Dir.chdir(root)
 database = ENV.fetch("TRACKLINE_DATABASE", File.join(root, "storage/development.sqlite3"))
 directory = ENV.fetch("TRACKLINE_BACKUP_DIR", File.join(root, "storage/backups"))
 backups = Trackline::DatabaseBackup.new(database: database, directory: directory)
