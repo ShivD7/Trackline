@@ -3,7 +3,10 @@
 <div class="auth-heading">
   <span class="eyebrow">Account recovery</span>
   <h1>Reset your password</h1>
-  <p>Enter your email and we’ll send you a secure reset link.</p>
+  <p>Enter your email to request a secure reset link.</p>
+  <% if Rails.env.development? && ActionMailer::Base.delivery_method == :local_file %>
+    <p class="local-recovery-hint">Local mode: reset messages are saved on this computer. Use <strong>Open Reset Emails.cmd</strong> in the Trackline folder to read your link.</p>
+  <% end %>
 </div>
 
 <%= form_with url: passwords_path, class: "auth-form" do |form| %>
