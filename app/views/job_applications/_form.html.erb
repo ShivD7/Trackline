@@ -10,7 +10,7 @@
       <div class="field">
         <%= form.label :company_name, "Company" %>
         <%= form.text_field :company_name, value: job_application.company&.name, required: true, list: "company-names", placeholder: "e.g. Shopify" %>
-        <datalist id="company-names"><% Company.alphabetical.each do |company| %><option value="<%= company.name %>"><% end %></datalist>
+        <datalist id="company-names"><% current_user.companies.alphabetical.each do |company| %><option value="<%= company.name %>"><% end %></datalist>
       </div>
       <div class="field">
         <%= form.label :role_title %>

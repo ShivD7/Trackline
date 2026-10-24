@@ -15,6 +15,16 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a", text: "Rails Engineer"
   end
 
+  test "company suggestions are private" do
+    users(:two).companies.create!(name: "Other user's private company")
+
+    get new_job_application_url
+
+    assert_response :success
+    assert_select "datalist option[value='Acme']"
+    assert_select "datalist option[value=?]", "Other user's private company", count: 0
+  end
+
   test "shows applications on the pipeline board" do
     get pipeline_job_applications_url
 

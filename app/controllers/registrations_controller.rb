@@ -13,12 +13,7 @@ class RegistrationsController < ApplicationController
     redirect_to root_path and return if authenticated?
 
     @user = User.new(registration_params)
-    first_account = User.none?
-
-    User.transaction do
-      @user.save!
-      Company.where(user_id: nil).update_all(user_id: @user.id) if first_account
-    end
+    @user.save!
 
     start_new_session_for(@user)
     redirect_to root_path, notice: "Welcome to Trackline. Your private workspace is ready."
