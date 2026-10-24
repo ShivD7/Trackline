@@ -28,7 +28,7 @@ Rails.application.configure do
   config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
@@ -54,7 +54,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  # Mail URLs and delivery are configured in initializers/mail_delivery.rb.
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
@@ -74,6 +74,11 @@ Rails.application.configure do
 
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
+
+  config.cache_store = :memory_store
+  config.active_job.queue_adapter = :async
+  config.hosts = [ URI.parse(ENV.fetch("TRACKLINE_URL", "https://localhost")).host ]
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

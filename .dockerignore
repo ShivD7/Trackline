@@ -12,6 +12,7 @@
 
 # Ignore all default key files.
 /config/master.key
+/config/local.cmd
 /config/credentials/*.key
 
 # Ignore all logfiles and tempfiles.

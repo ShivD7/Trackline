@@ -7,8 +7,9 @@ url = URI.parse(ENV.fetch("TRACKLINE_URL", "http://127.0.0.1:#{ENV.fetch('PORT',
 unless url.is_a?(URI::HTTP) && url.host && url.userinfo.nil? && url.path.in?([ "", "/" ]) && url.query.nil? && url.fragment.nil?
   raise "TRACKLINE_URL must be an HTTP(S) origin, for example http://127.0.0.1:3001"
 end
-if Rails.env.production? && (url.scheme != "https" || ENV["SMTP_ADDRESS"].blank?)
-  raise "Production requires an HTTPS TRACKLINE_URL and SMTP_ADDRESS."
+if Rails.env.production? && !ENV["SECRET_KEY_BASE_DUMMY"] &&
+    (url.scheme != "https" || ENV["SMTP_ADDRESS"].blank? || ENV["TRACKLINE_MAIL_FROM"].blank?)
+  raise "Production requires an HTTPS TRACKLINE_URL, SMTP_ADDRESS, and TRACKLINE_MAIL_FROM."
 end
 
 ActionMailer::Base.default_url_options = { host: url.host, port: url.port, protocol: url.scheme }
