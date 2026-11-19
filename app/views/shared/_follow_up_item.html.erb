@@ -1,0 +1,14 @@
+<div class="attention-row">
+  <%= link_to application, class: class_names("follow-up-item", overdue: application.overdue?) do %>
+    <time datetime="<%= application.follow_up_on.iso8601 %>">
+      <strong><%= application.follow_up_on.strftime("%d") %></strong>
+      <span><%= application.follow_up_on.strftime("%b") %></span>
+    </time>
+    <span>
+      <strong><%= application.company.name %></strong>
+      <small><%= application.role_title %></small>
+      <span class="follow-up-date <%= "text-danger" if application.overdue? %>"><%= follow_up_label(application) %></span>
+    </span>
+  <% end %>
+  <%= button_to "Done", complete_follow_up_job_application_path(application), method: :patch, class: "button button--small button--secondary", aria: { label: "Complete follow-up for #{application.role_title} at #{application.company.name}" } %>
+</div>

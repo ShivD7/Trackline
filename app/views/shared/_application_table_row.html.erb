@@ -1,0 +1,15 @@
+<tr class="application-row">
+  <td class="table-company" data-label="Company">
+    <span class="company-avatar" aria-hidden="true"><%= initials(job_application.company.name) %></span>
+    <%= link_to job_application.company.name, job_application.company %>
+  </td>
+  <td class="table-role" data-label="Role">
+    <%= link_to job_application.role_title, job_application, class: "application-title" %>
+    <span class="application-company"><%= job_application.location.presence || "Location flexible" %></span>
+    <% if job_application.stale? %><span class="attention-pill">Needs update</span><% end %>
+  </td>
+  <td data-label="Applied"><%= formatted_date(job_application.applied_on, fallback: "Not applied") %></td>
+  <td data-label="Stage"><%= render "shared/status_badge", status: job_application.status %></td>
+  <td data-label="Last activity"><%= time_ago_in_words(job_application.updated_at) %> ago</td>
+  <td data-label="Follow-up" class="<%= "text-danger" if job_application.overdue? %>"><%= follow_up_label(job_application) %></td>
+</tr>

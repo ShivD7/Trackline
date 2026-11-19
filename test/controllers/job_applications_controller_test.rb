@@ -105,6 +105,24 @@ class JobApplicationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "screening", @application.reload.status
   end
 
+  test "focused stage form preserves company and other application details" do
+    @application.update!(location: "Toronto", description: "Keep these notes")
+
+    get job_application_url(@application)
+    assert_select "form[aria-label='Update hiring stage'] select[name='job_application[status]']"
+
+    assert_difference -> { @application.stage_changes.count }, 1 do
+      patch job_application_url(@application), params: { job_application: { status: "interviewing", applied_on: Date.current } }
+    end
+
+    assert_redirected_to job_application_url(@application)
+    @application.reload
+    assert_equal @company, @application.company
+    assert_equal "interviewing", @application.status
+    assert_equal "Toronto", @application.location
+    assert_equal "Keep these notes", @application.description
+  end
+
   test "duplicates an application as a fresh wishlist item" do
     @application.update!(status: :applied, applied_on: Date.current, follow_up_on: 3.days.from_now)
 

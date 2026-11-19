@@ -8,8 +8,16 @@ class DashboardController < ApplicationController
     @stage_moves_this_week = StageChange.where(job_application_id: applications.select(:id), changed_at: 7.days.ago..).count
     @response_rate = response_rate(applications)
     @recent_applications = applications.includes(:company).recent_first.limit(6)
-    @follow_ups = applications.includes(:company).upcoming_follow_ups.order(:follow_up_on).limit(6)
+    @follow_ups = applications.includes(:company).active.where(follow_up_on: ..14.days.from_now.to_date).order(:follow_up_on).limit(6)
     @overdue_count = applications.follow_up_due.where("follow_up_on < ?", Date.current).count
+    @today_count = applications.active.where(follow_up_on: Date.current).count
+    @upcoming_count = applications.upcoming_follow_ups.where("follow_up_on > ?", Date.current).count
+    first_week = Date.current.beginning_of_week - 3.weeks
+    daily_counts = applications.where(applied_on: first_week..Date.current).group(:applied_on).count
+    @weekly_activity = 4.times.map do |offset|
+      week = first_week + offset.weeks
+      [ week, daily_counts.sum { |date, count| date.in?(week..week.end_of_week) ? count : 0 } ]
+    end
   end
 
   def follow_ups

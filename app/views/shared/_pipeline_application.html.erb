@@ -1,0 +1,10 @@
+<article class="pipeline-application">
+  <span class="pipeline-company"><%= application.company.name %></span>
+  <%= link_to application.role_title, application, class: "application-title" %>
+  <span><%= application.location.presence || application.work_mode&.humanize || "Location flexible" %></span>
+  <small>Updated <%= time_ago_in_words(application.updated_at) %> ago</small>
+  <% if application.follow_up_on %>
+    <span class="pipeline-follow-up <%= "text-danger" if application.overdue? %>">Follow-up: <%= follow_up_label(application) %></span>
+  <% end %>
+  <%= link_to "Change stage", edit_job_application_path(application, anchor: "pipeline-details"), class: "text-link" %>
+</article>

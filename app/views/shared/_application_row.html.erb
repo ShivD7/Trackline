@@ -6,9 +6,10 @@
   </div>
   <div class="application-meta">
     <div class="application-badges">
-      <span class="status-pill status-pill--<%= job_application.status %>"><%= status_label(job_application.status) %></span>
+      <%= render "shared/status_badge", status: job_application.status %>
       <% if job_application.stale? %><span class="attention-pill">Needs update</span><% end %>
     </div>
-    <span class="muted"><%= job_application.follow_up_on ? "Follow up #{formatted_date(job_application.follow_up_on)}" : "Updated #{time_ago_in_words(job_application.updated_at)} ago" %></span>
+    <% if job_application.follow_up_on %><span class="muted <%= "text-danger" if job_application.overdue? %>">Follow-up: <%= follow_up_label(job_application) %></span><% end %>
+    <span class="muted">Updated <%= time_ago_in_words(job_application.updated_at) %> ago</span>
   </div>
 </article>

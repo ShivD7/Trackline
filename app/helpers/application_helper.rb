@@ -19,8 +19,18 @@ module ApplicationHelper
 
   def nav_link(label, path, match: nil, exclude: nil)
     active = match ? request.path.start_with?(match) : current_page?(path)
+    active = false if path.include?("#")
     active = false if exclude && request.path.start_with?(exclude)
     link_to label, path, class: class_names("nav-link", active: active), "aria-current": ("page" if active)
+  end
+
+  def follow_up_label(application)
+    date = application.follow_up_on
+    return "Not scheduled" unless date
+    return "Overdue · #{formatted_date(date)}" if application.overdue?
+    return "Due today" if date == Date.current
+
+    formatted_date(date)
   end
 
   def formatted_date(date, fallback: "Not set")

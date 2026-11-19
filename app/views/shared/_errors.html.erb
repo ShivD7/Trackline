@@ -1,9 +1,9 @@
 <% if object.errors.any? %>
-  <div class="form-errors" role="alert">
+  <div class="form-errors" role="alert" id="<%= dom_id(object, :errors) %>" tabindex="-1" data-controller="form-errors">
     <strong><%= pluralize(object.errors.count, "detail") %> needs attention</strong>
     <ul>
-      <% object.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+      <% object.errors.each do |error| %>
+        <li><%= link_to error.full_message, "##{object.model_name.singular}_#{error.attribute.to_s.tr('.', '_')}", data: { form_errors_target: "link" } %></li>
       <% end %>
     </ul>
   </div>

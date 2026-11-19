@@ -23,7 +23,7 @@
 <div class="record-layout">
   <div class="record-primary">
     <section class="content-card detail-card">
-      <div class="section-heading"><div><span class="eyebrow">Snapshot</span><h2>Application details</h2></div></div>
+      <div class="section-heading"><div><h2>Application details</h2></div></div>
       <dl class="detail-grid">
         <div><dt>Applied</dt><dd><%= formatted_date(@job_application.applied_on) %></dd></div>
         <div><dt>Follow up</dt><dd class="<%= "text-danger" if @job_application.overdue? %>"><%= formatted_date(@job_application.follow_up_on) %></dd></div>
@@ -43,6 +43,11 @@
           </dd>
         </div>
       </dl>
+      <%= form_with model: @job_application, class: "stage-form", html: { aria: { label: "Update hiring stage" } } do |form| %>
+        <div class="field"><%= form.label :status, "Stage", for: "quick-status" %><%= form.select :status, JobApplication::STATUSES.map { |status| [status_label(status), status] }, {}, id: "quick-status" %></div>
+        <div class="field"><%= form.label :applied_on, "Application date", for: "quick-applied-on" %><%= form.date_field :applied_on, value: @job_application.applied_on || Date.current, id: "quick-applied-on" %></div>
+        <%= form.submit "Save stage", class: "button button--secondary", data: { turbo_submits_with: "Saving…" } %>
+      <% end %>
       <% if @job_application.follow_up_on.present? %>
         <div class="detail-actions">
           <%= button_to "Mark follow-up complete", complete_follow_up_job_application_path(@job_application), method: :patch, class: "button button--small button--secondary" %>
@@ -54,7 +59,7 @@
     </section>
 
     <section class="content-card">
-      <div class="section-heading"><div><span class="eyebrow">Journal</span><h2>Notes</h2></div></div>
+      <div class="section-heading"><div><h2>Notes</h2></div></div>
       <%= form_with model: [@job_application, @note], class: "note-form" do |form| %>
         <%= render "shared/errors", object: @note %>
         <%= form.text_area :body, rows: 3, placeholder: "Add an interview note, recruiter update, or next step…", aria: { label: "Note" } %>
@@ -75,7 +80,7 @@
 
   <aside class="record-secondary">
     <section class="content-card">
-      <div class="section-heading"><div><span class="eyebrow">History</span><h2>Stage changes</h2></div></div>
+      <div class="section-heading"><div><h2>Stage changes</h2></div></div>
       <ol class="timeline">
         <% @job_application.stage_changes.each do |change| %>
           <li><span></span><div><strong><%= status_label(change.to_status) %></strong><small><%= change.from_status ? "From #{status_label(change.from_status)}" : "Application created" %> · <%= time_ago_in_words(change.changed_at) %> ago</small></div></li>

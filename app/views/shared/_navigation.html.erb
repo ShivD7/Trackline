@@ -1,0 +1,6 @@
+<%= nav_link "Overview", root_path %>
+<%= nav_link "Applications", job_applications_path, match: "/job_applications", exclude: "/job_applications/pipeline" %>
+<%= nav_link "Pipeline", pipeline_job_applications_path %>
+<%= nav_link "Companies", companies_path, match: "/companies" %>
+<%= nav_link "Follow-ups", follow_ups_path %>
+<%= nav_link "Analytics", root_path(anchor: "search-activity") %>

@@ -2,7 +2,7 @@
 
 <section class="page-header">
   <div>
-    <span class="eyebrow">Pipeline</span>
+
     <h1>Applications</h1>
     <p>Search, filter, and keep every opportunity moving.</p>
   </div>
@@ -32,13 +32,17 @@
   <% end %>
 <% end %>
 
-<section class="content-card">
+<section class="content-card applications-card">
   <div class="section-heading">
     <h2><%= pluralize(@job_applications.size, "opportunity") %></h2>
   </div>
   <% if @job_applications.any? %>
-    <div class="application-list application-list--roomy">
-      <%= render partial: "shared/application_row", collection: @job_applications, as: :job_application %>
+    <div class="table-container">
+      <table class="applications-table">
+        <caption class="sr-only">Applications with company, role, application date, stage, last activity, and next follow-up</caption>
+        <thead><tr><th scope="col">Company</th><th scope="col">Role / location</th><th scope="col">Applied</th><th scope="col">Stage</th><th scope="col">Last activity</th><th scope="col">Next follow-up</th></tr></thead>
+        <tbody><%= render partial: "shared/application_table_row", collection: @job_applications, as: :job_application %></tbody>
+      </table>
     </div>
   <% else %>
     <div class="empty-state">
